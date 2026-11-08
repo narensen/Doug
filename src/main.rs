@@ -27,3 +27,10 @@ fn main()
         }
     }
 }
+
+fn process_directory(dir : &str) {
+
+
+    
+
+}
