@@ -1,4 +1,5 @@
 use clap::{Subcommand, Parser};
+use std::fs;
 
 #[derive(Parser)]
 #[command(name = "Pipeline")]
@@ -17,20 +18,31 @@ enum Commands {
     
 }
 
-fn main() 
+fn main() -> std::io::Result<()> 
 {
     let cli = CLI::parse();
 
-    match cli.command {
-        Commands::Process { path } => {
-            println!("Would Process Directory {}", path);
+    let Commands::Process { path } = cli.command;
+    process_directory(&path)?;
+
+    Ok(())
+
+}
+fn process_directory(dir : &str) -> std::io::Result<()> {
+
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        let path = entry.path();    
+
+        if path.is_file() {
+            let size = entry.metadata()?.len();
+            println!("{}  ({} bytes)", path.display(), size);
+        }
+
+        else {
+            println!("{}", path.display())
         }
     }
-}
-
-fn process_directory(dir : &str) {
-
-
-    
+    Ok(())
 
 }
