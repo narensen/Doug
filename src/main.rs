@@ -1,5 +1,6 @@
 use clap::{Subcommand, Parser};
 use std::fs;
+use std::path::Path;
 
 #[derive(Parser)]
 #[command(name = "Pipeline")]
@@ -29,6 +30,11 @@ fn main() -> std::io::Result<()>
 
 }
 fn process_directory(dir : &str) -> std::io::Result<()> {
+    let path = Path::new(dir);
+    if !path.is_dir() {
+        println!("Error : {} is not a directory", dir);
+        return Ok(());
+    }
 
     for entry in fs::read_dir(dir)? {
         let entry = entry?;
